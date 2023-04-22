@@ -1,5 +1,6 @@
 package com.harera.socialnetwork.model.user;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.data.neo4j.core.schema.Node;
@@ -41,8 +42,8 @@ public class User extends BaseNode {
     private String email;
 
     @Relationship(type = "FOLLOWS", direction = Relationship.Direction.OUTGOING)
-    private Set<User> followings;
+    private Set<User> followings = new HashSet<>();
 
     @Relationship(type = "FOLLOWS", direction = Relationship.Direction.INCOMING)
-    private Set<User> followers;
+    private Set<User> followers = new HashSet<>();
 }

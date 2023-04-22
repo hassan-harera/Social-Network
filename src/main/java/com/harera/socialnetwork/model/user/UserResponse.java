@@ -5,6 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Data
-public class UserRequest extends UserDto {
+public class UserResponse extends UserDto {
 
 }

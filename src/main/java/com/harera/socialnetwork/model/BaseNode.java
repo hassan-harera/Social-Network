@@ -15,5 +15,6 @@ public abstract class BaseNode implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
+
     private boolean active = true;
 }
