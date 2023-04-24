@@ -10,6 +10,8 @@ import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.harera.socialnetwork.model.BaseNode;
+import com.harera.socialnetwork.model.page.follow.PageFollow;
+import com.harera.socialnetwork.model.page.like.PageLike;
 import com.harera.socialnetwork.model.user.User;
 
 import lombok.Data;
@@ -28,9 +30,9 @@ public class Page extends BaseNode {
     @Relationship(value = "OWN", direction = Relationship.Direction.INCOMING)
     private User owner;
 
-    @Relationship(value = "FOLLOW", direction = Relationship.Direction.INCOMING)
-    private Set<User> followers;
+    @Relationship(value = "FOLLOW_PAGE", direction = Relationship.Direction.INCOMING)
+    private Set<PageFollow> followers;
 
-    @Relationship(value = "LIKE", direction = Relationship.Direction.INCOMING)
-    private Set<User> likes;
+    @Relationship(value = "LIKE_PAGE", direction = Relationship.Direction.INCOMING)
+    private Set<PageLike> likes;
 }

@@ -71,4 +71,9 @@ public class PostService {
 
         postRepository.save(post);
     }
+
+    public PostResponse get(Long id) {
+        Post post = postRepository.findById(id).orElseThrow();
+        return modelMapper.map(post, PostResponse.class);
+    }
 }

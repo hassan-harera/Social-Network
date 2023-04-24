@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.harera.socialnetwork.model.page.follow.PageFollow;
+import com.harera.socialnetwork.model.page.like.PageLike;
 import com.harera.socialnetwork.model.post.comment.Comment;
 import com.harera.socialnetwork.model.post.comment.CommentRequest;
 import com.harera.socialnetwork.model.post.like.Like;
@@ -75,10 +77,13 @@ public class PageService {
 
     public void follow(Long id, PageFollowRequest request) {
         Page page = pageRepository.findById(id).orElseThrow();
-
         User user = userRepository.findById(request.getUserId()).orElseThrow();
-        page.getFollowers().add(user);
 
+        PageFollow pageFollow = new PageFollow();
+        pageFollow.setUser(user);
+        pageFollow.setDateTime(LocalDateTime.now());
+
+        page.getFollowers().add(pageFollow);
         pageRepository.save(page);
     }
 
@@ -86,7 +91,11 @@ public class PageService {
         Page page = pageRepository.findById(id).orElseThrow();
 
         User user = userRepository.findById(request.getUserId()).orElseThrow();
-        page.getLikes().add(user);
+        PageLike pageLike = new PageLike();
+        pageLike.setUser(user);
+        pageLike.setDateTime(LocalDateTime.now());
+
+        page.getLikes().add(pageLike);
 
         pageRepository.save(page);
     }

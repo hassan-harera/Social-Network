@@ -8,6 +8,7 @@ import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.harera.socialnetwork.model.BaseNode;
+import com.harera.socialnetwork.model.user.follow.UserFollow;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -41,9 +42,9 @@ public class User extends BaseNode {
     @Property("email")
     private String email;
 
-    @Relationship(type = "FOLLOWS", direction = Relationship.Direction.OUTGOING)
-    private Set<User> followings = new HashSet<>();
+    @Relationship(type = "FOLLOW_USER", direction = Relationship.Direction.OUTGOING)
+    private Set<UserFollow> followings = new HashSet<>();
 
-    @Relationship(type = "FOLLOWS", direction = Relationship.Direction.INCOMING)
-    private Set<User> followers = new HashSet<>();
+    @Relationship(type = "FOLLOW_USER", direction = Relationship.Direction.INCOMING)
+    private Set<UserFollow> followers = new HashSet<>();
 }

@@ -72,8 +72,8 @@ public class PostController {
     @Operation(summary = "Get", description = "Get a user", tags = "User",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
-    public ResponseEntity<UserResponse> get(@PathVariable("id") Long id) {
-        UserResponse userResponse = userService.get(id);
+    public ResponseEntity<PostResponse> get(@PathVariable("id") Long id) {
+        PostResponse userResponse = postService.get(id);
         return ResponseEntity.ok(userResponse);
     }
 }
