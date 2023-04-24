@@ -35,7 +35,7 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
-    @PostMapping("/{id}/followings")
+    @PostMapping("/{id}/follow")
     @Operation(summary = "Follow", description = "Follow another user", tags = "User",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
