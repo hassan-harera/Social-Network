@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.harera.socialnetwork.model.like.LikeRequest;
 import com.harera.socialnetwork.model.page.PageRequest;
 import com.harera.socialnetwork.model.page.PageResponse;
 import com.harera.socialnetwork.model.page.follow.PageFollowRequest;

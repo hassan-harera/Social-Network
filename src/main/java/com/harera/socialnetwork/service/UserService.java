@@ -3,16 +3,13 @@ package com.harera.socialnetwork.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import com.harera.socialnetwork.model.follow.FollowingRequest;
+import com.harera.socialnetwork.model.user.follow.FollowRequest;
 import com.harera.socialnetwork.model.user.User;
 import com.harera.socialnetwork.model.user.UserRequest;
 import com.harera.socialnetwork.model.user.UserResponse;
 import com.harera.socialnetwork.repository.UserRepository;
-import com.harera.socialnetwork.util.ObjectMapperUtils;
 
 import lombok.extern.log4j.Log4j2;
-
-import java.util.List;
 
 import static com.harera.socialnetwork.util.ObjectMapperUtils.mapAll;
 
@@ -34,7 +31,7 @@ public class UserService {
         return modelMapper.map(user, UserResponse.class);
     }
 
-    public void follow(Long followingId, FollowingRequest request) {
+    public void follow(Long followingId, FollowRequest request) {
         User following = userRepository.findById(followingId).orElseThrow();
         User follower = userRepository.findById(request.getFollowerId()).orElseThrow();
 

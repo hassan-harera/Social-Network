@@ -1,7 +1,6 @@
-package com.harera.socialnetwork.model.comment;
+package com.harera.socialnetwork.model.post.comment;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 

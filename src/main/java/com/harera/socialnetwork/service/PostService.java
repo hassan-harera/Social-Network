@@ -6,10 +6,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.harera.socialnetwork.model.comment.Comment;
-import com.harera.socialnetwork.model.comment.CommentRequest;
-import com.harera.socialnetwork.model.like.Like;
-import com.harera.socialnetwork.model.like.LikeRequest;
+import com.harera.socialnetwork.model.post.comment.Comment;
+import com.harera.socialnetwork.model.post.comment.CommentRequest;
+import com.harera.socialnetwork.model.post.like.Like;
+import com.harera.socialnetwork.model.post.like.LikeRequest;
 import com.harera.socialnetwork.model.post.Post;
 import com.harera.socialnetwork.model.post.PostRequest;
 import com.harera.socialnetwork.model.post.PostResponse;

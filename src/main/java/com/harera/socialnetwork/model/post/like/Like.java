@@ -1,4 +1,4 @@
-package com.harera.socialnetwork.model.like;
+package com.harera.socialnetwork.model.post.like;
 
 import java.time.LocalDateTime;
 

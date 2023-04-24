@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import com.harera.socialnetwork.model.comment.Comment;
-import com.harera.socialnetwork.model.comment.CommentRequest;
-import com.harera.socialnetwork.model.like.Like;
-import com.harera.socialnetwork.model.like.LikeRequest;
+import com.harera.socialnetwork.model.post.comment.Comment;
+import com.harera.socialnetwork.model.post.comment.CommentRequest;
+import com.harera.socialnetwork.model.post.like.Like;
+import com.harera.socialnetwork.model.post.like.LikeRequest;
 import com.harera.socialnetwork.model.page.Page;
 import com.harera.socialnetwork.model.page.PageRequest;
 import com.harera.socialnetwork.model.page.PageResponse;

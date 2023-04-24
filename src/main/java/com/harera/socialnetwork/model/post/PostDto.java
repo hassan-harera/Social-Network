@@ -6,8 +6,8 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.harera.socialnetwork.model.BaseNodeDto;
-import com.harera.socialnetwork.model.comment.Comment;
-import com.harera.socialnetwork.model.like.Like;
+import com.harera.socialnetwork.model.post.comment.Comment;
+import com.harera.socialnetwork.model.post.like.Like;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -10,8 +10,8 @@ import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.harera.socialnetwork.model.BaseNode;
-import com.harera.socialnetwork.model.comment.Comment;
-import com.harera.socialnetwork.model.like.Like;
+import com.harera.socialnetwork.model.post.comment.Comment;
+import com.harera.socialnetwork.model.post.like.Like;
 import com.harera.socialnetwork.model.user.User;
 
 import lombok.Getter;

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.harera.socialnetwork.model.comment.CommentRequest;
-import com.harera.socialnetwork.model.like.LikeRequest;
+import com.harera.socialnetwork.model.post.comment.CommentRequest;
+import com.harera.socialnetwork.model.post.like.LikeRequest;
 import com.harera.socialnetwork.model.post.PostRequest;
 import com.harera.socialnetwork.model.post.PostResponse;
 import com.harera.socialnetwork.model.user.UserResponse;

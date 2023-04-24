@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.harera.socialnetwork.model.follow.FollowingRequest;
+import com.harera.socialnetwork.model.user.follow.FollowRequest;
 import com.harera.socialnetwork.model.user.UserRequest;
 import com.harera.socialnetwork.model.user.UserResponse;
 import com.harera.socialnetwork.service.UserService;
@@ -40,7 +40,7 @@ public class UserController {
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
     public void follow(@PathVariable("id") Long id,
-                    @RequestBody FollowingRequest request) {
+                    @RequestBody FollowRequest request) {
         userService.follow(id, request);
     }
 
