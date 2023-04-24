@@ -13,6 +13,8 @@ import com.harera.socialnetwork.model.post.like.LikeRequest;
 import com.harera.socialnetwork.model.post.Post;
 import com.harera.socialnetwork.model.post.PostRequest;
 import com.harera.socialnetwork.model.post.PostResponse;
+import com.harera.socialnetwork.model.post.share.PostShare;
+import com.harera.socialnetwork.model.post.share.PostShareRequest;
 import com.harera.socialnetwork.model.user.User;
 import com.harera.socialnetwork.repository.PostRepository;
 import com.harera.socialnetwork.repository.UserRepository;
@@ -37,15 +39,6 @@ public class PostService {
         return modelMapper.map(post, PostResponse.class);
     }
 
-    public void comment(Long id, CommentRequest request) {
-        Comment comment = modelMapper.map(request, Comment.class);
-        Post post = postRepository.findById(id).orElseThrow();
-        User user = userRepository.findById(request.getAuthorId()).orElseThrow();
-        comment.setAuthor(user);
-        post.getComments().add(comment);
-        postRepository.save(post);
-    }
-
     public void like(Long id, LikeRequest request) {
         Post post = postRepository.findById(id).orElseThrow();
         User user = userRepository.findById(request.getAuthorId()).orElseThrow();
@@ -55,6 +48,27 @@ public class PostService {
         like.setDatetime(LocalDateTime.now());
 
         post.getLikes().add(like);
+        postRepository.save(post);
+    }
+
+    public void comment(Long id, CommentRequest request) {
+        Comment comment = modelMapper.map(request, Comment.class);
+        Post post = postRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(request.getAuthorId()).orElseThrow();
+        comment.setAuthor(user);
+        post.getComments().add(comment);
+        postRepository.save(post);
+    }
+
+    public void share(Long id, PostShareRequest request) {
+        PostShare share = modelMapper.map(request, PostShare.class);
+
+        User user = userRepository.findById(request.getAuthorId()).orElseThrow();
+        share.setAuthor(user);
+
+        Post post = postRepository.findById(id).orElseThrow();
+        post.getShares().add(share);
+
         postRepository.save(post);
     }
 }

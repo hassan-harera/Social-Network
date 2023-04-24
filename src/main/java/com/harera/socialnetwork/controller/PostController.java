@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.harera.socialnetwork.model.post.comment.CommentRequest;
-import com.harera.socialnetwork.model.post.like.LikeRequest;
 import com.harera.socialnetwork.model.post.PostRequest;
 import com.harera.socialnetwork.model.post.PostResponse;
+import com.harera.socialnetwork.model.post.comment.CommentRequest;
+import com.harera.socialnetwork.model.post.like.LikeRequest;
+import com.harera.socialnetwork.model.post.share.PostShareRequest;
 import com.harera.socialnetwork.model.user.UserResponse;
 import com.harera.socialnetwork.service.PostService;
 import com.harera.socialnetwork.service.UserService;
@@ -41,6 +42,14 @@ public class PostController {
         return ResponseEntity.ok(userResponse);
     }
 
+    @PostMapping("/{id}/likes")
+    @Operation(summary = "Like", description = "Like a post", tags = "Post",
+                    responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public void like(@PathVariable("id") Long id, @RequestBody LikeRequest request) {
+        postService.like(id, request);
+    }
+
     @PostMapping("/{id}/comments")
     @Operation(summary = "Comment", description = "Comment a comment", tags = "Post",
                     responses = @ApiResponse(responseCode = "200",
@@ -50,13 +59,13 @@ public class PostController {
         postService.comment(id, request);
     }
 
-    @PostMapping("/{id}/likes")
-    @Operation(summary = "Like", description = "Like a post", tags = "Post",
+    @PostMapping("/{id}/shares")
+    @Operation(summary = "Share", description = "Share a comment", tags = "Post",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
-    public void like(@PathVariable("id") Long id,
-                    @RequestBody LikeRequest request) {
-        postService.like(id, request);
+    public void share(@PathVariable("id") Long id,
+                    @RequestBody PostShareRequest request) {
+        postService.share(id, request);
     }
 
     @GetMapping("/{id}")

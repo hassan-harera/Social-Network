@@ -12,6 +12,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import com.harera.socialnetwork.model.BaseNode;
 import com.harera.socialnetwork.model.post.comment.Comment;
 import com.harera.socialnetwork.model.post.like.Like;
+import com.harera.socialnetwork.model.post.share.PostShare;
 import com.harera.socialnetwork.model.user.User;
 
 import lombok.Getter;
@@ -37,4 +38,7 @@ public class Post extends BaseNode {
 
     @Relationship(type = "COMMENTED", direction = Relationship.Direction.INCOMING)
     private Set<Comment> comments = new HashSet<>();
+
+    @Relationship(type = "SHARED", direction = Relationship.Direction.INCOMING)
+    private Set<PostShare> shares = new HashSet<>();
 }
