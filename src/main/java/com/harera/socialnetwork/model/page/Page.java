@@ -2,6 +2,7 @@ package com.harera.socialnetwork.model.page;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -28,8 +29,8 @@ public class Page extends BaseNode {
     private User owner;
 
     @Relationship(value = "FOLLOW", direction = Relationship.Direction.INCOMING)
-    private List<User> followers;
+    private Set<User> followers;
 
     @Relationship(value = "LIKE", direction = Relationship.Direction.INCOMING)
-    private List<User> liked;
+    private Set<User> likes;
 }

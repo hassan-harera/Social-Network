@@ -35,4 +35,7 @@ public class PageDto extends BaseNodeDto {
 
     @JsonProperty("followers")
     private List<UserResponse> followers;
+
+    @JsonProperty("likes")
+    private List<UserResponse> likes;
 }

@@ -12,6 +12,8 @@ import com.harera.socialnetwork.model.like.LikeRequest;
 import com.harera.socialnetwork.model.page.Page;
 import com.harera.socialnetwork.model.page.PageRequest;
 import com.harera.socialnetwork.model.page.PageResponse;
+import com.harera.socialnetwork.model.page.follow.PageFollowRequest;
+import com.harera.socialnetwork.model.page.like.PageLikeRequest;
 import com.harera.socialnetwork.model.post.Post;
 import com.harera.socialnetwork.model.user.User;
 import com.harera.socialnetwork.repository.PageRepository;
@@ -69,5 +71,23 @@ public class PageService {
     public PageResponse get(Long id) {
         Page page = pageRepository.findById(id).orElseThrow();
         return modelMapper.map(page, PageResponse.class);
+    }
+
+    public void follow(Long id, PageFollowRequest request) {
+        Page page = pageRepository.findById(id).orElseThrow();
+
+        User user = userRepository.findById(request.getUserId()).orElseThrow();
+        page.getFollowers().add(user);
+
+        pageRepository.save(page);
+    }
+
+    public void like(Long id, PageLikeRequest request) {
+        Page page = pageRepository.findById(id).orElseThrow();
+
+        User user = userRepository.findById(request.getUserId()).orElseThrow();
+        page.getLikes().add(user);
+
+        pageRepository.save(page);
     }
 }
