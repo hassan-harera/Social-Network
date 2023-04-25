@@ -47,12 +47,30 @@ public class GroupController {
         groupService.follow(id, request);
     }
 
+    @PostMapping("/{id}/unfollow")
+    @Operation(summary = "Unfollow Group", description = "Unfollow a group",
+                    tags = "Group", responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public void unfollow(@PathVariable("id") Long id,
+                    @RequestBody GroupFollowRequest request) {
+        groupService.unfollow(id, request);
+    }
+
     @PostMapping("/{id}/join")
     @Operation(summary = "Join Group", description = "Join a group", tags = "Group",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
     public void join(@PathVariable("id") Long id, @RequestBody GroupJoinRequest request) {
         groupService.join(id, request);
+    }
+
+    @PostMapping("/{id}/leave")
+    @Operation(summary = "Leave Group", description = "Leave a group", tags = "Group",
+                    responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public void leave(@PathVariable("id") Long id,
+                    @RequestBody GroupJoinRequest request) {
+        groupService.leave(id, request);
     }
 
     @GetMapping("/{id}")

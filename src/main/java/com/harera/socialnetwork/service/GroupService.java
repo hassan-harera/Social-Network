@@ -73,4 +73,17 @@ public class GroupService {
         group.getJoined().add(groupJoin);
         groupRepository.save(group);
     }
+
+    public void leave(Long id, GroupJoinRequest request) {
+        groupRepository.leave(request.getUserId(), id);
+    }
+
+    public void unfollow(Long id, GroupFollowRequest request) {
+        Group group = groupRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(request.getUserId()).orElseThrow();
+
+        group.getFollowers().removeIf(groupFollow -> groupFollow.getUser().getId()
+                        .equals(user.getId()));
+        groupRepository.save(group);
+    }
 }

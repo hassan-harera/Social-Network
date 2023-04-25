@@ -28,9 +28,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class PostController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private PostService postService;
 
     @PostMapping
@@ -46,8 +43,9 @@ public class PostController {
     @Operation(summary = "Like", description = "Like a post", tags = "Post",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
-    public void like(@PathVariable("id") Long id, @RequestBody LikeRequest request) {
-        postService.like(id, request);
+    public ResponseEntity<PostResponse> like(@PathVariable("id") Long id, @RequestBody LikeRequest request) {
+        PostResponse like = postService.like(id, request);
+        return ResponseEntity.ok(like);
     }
 
     @PostMapping("/{id}/comments")

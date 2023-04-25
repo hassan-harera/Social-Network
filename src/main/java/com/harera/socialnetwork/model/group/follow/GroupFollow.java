@@ -11,8 +11,10 @@ import com.harera.socialnetwork.model.user.User;
 
 import jdk.jfr.Timestamp;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(of = { "id" })
 @RelationshipProperties
 public class GroupFollow extends BaseNode {
 

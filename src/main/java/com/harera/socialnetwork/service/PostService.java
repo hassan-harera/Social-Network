@@ -1,6 +1,7 @@
 package com.harera.socialnetwork.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +40,9 @@ public class PostService {
         return modelMapper.map(post, PostResponse.class);
     }
 
-    public void like(Long id, LikeRequest request) {
-        Post post = postRepository.findById(id).orElseThrow();
-        User user = userRepository.findById(request.getAuthorId()).orElseThrow();
-
-        Like like = new Like();
-        like.setAuthor(user);
-        like.setDatetime(LocalDateTime.now());
-
-        post.getLikes().add(like);
-        postRepository.save(post);
+    public PostResponse like(Long id, LikeRequest request) {
+        Post like = postRepository.like(request.getAuthorId(), id).orElseThrow();
+        return modelMapper.map(like, PostResponse.class);
     }
 
     public void comment(Long id, CommentRequest request) {
