@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.harera.socialnetwork.model.BaseNode;
 import com.harera.socialnetwork.model.BaseNodeDto;
 import com.harera.socialnetwork.model.post.Post;
+import com.harera.socialnetwork.model.user.User;
 
 import lombok.Data;
 import lombok.Getter;
@@ -19,11 +20,11 @@ import lombok.Setter;
 public class CommentDto extends BaseNodeDto {
 
     @JsonProperty("datetime")
-    private LocalDateTime datetime;
+    private String datetime;
 
-    @JsonProperty("body")
-    private String body;
+    @JsonProperty("comment")
+    private String comment;
 
-    @JsonProperty("post")
-    private Post post;
+    @JsonProperty("author")
+    private User author;
 }

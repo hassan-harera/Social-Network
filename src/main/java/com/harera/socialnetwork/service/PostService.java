@@ -1,19 +1,19 @@
 package com.harera.socialnetwork.service;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.harera.socialnetwork.model.post.comment.Comment;
-import com.harera.socialnetwork.model.post.comment.CommentRequest;
-import com.harera.socialnetwork.model.post.like.Like;
-import com.harera.socialnetwork.model.post.like.LikeRequest;
 import com.harera.socialnetwork.model.post.Post;
 import com.harera.socialnetwork.model.post.PostRequest;
 import com.harera.socialnetwork.model.post.PostResponse;
+import com.harera.socialnetwork.model.post.comment.Comment;
+import com.harera.socialnetwork.model.post.comment.CommentRequest;
+import com.harera.socialnetwork.model.post.comment.CommentResponse;
+import com.harera.socialnetwork.model.post.like.LikeRequest;
 import com.harera.socialnetwork.model.post.share.PostShare;
 import com.harera.socialnetwork.model.post.share.PostShareRequest;
 import com.harera.socialnetwork.model.user.User;
@@ -45,18 +45,16 @@ public class PostService {
         return modelMapper.map(like, PostResponse.class);
     }
 
-    public PostResponse unlike(Long postId, Long userId) {
-        Post like = postRepository.unlike(userId, postId).orElseThrow();
+    public PostResponse deleteLike(Long postId, Long userId) {
+        Post like = postRepository.deleteLike(userId, postId).orElseThrow();
         return modelMapper.map(like, PostResponse.class);
     }
 
-    public void comment(Long id, CommentRequest request) {
-        Comment comment = modelMapper.map(request, Comment.class);
-        Post post = postRepository.findById(id).orElseThrow();
-        User user = userRepository.findById(request.getAuthorId()).orElseThrow();
-        comment.setAuthor(user);
-        post.getComments().add(comment);
-        postRepository.save(post);
+    public PostResponse comment(Long id, CommentRequest request) {
+        Post post = postRepository
+                        .comment(request.getAuthorId(), id, request.getComment())
+                        .orElseThrow();
+        return modelMapper.map(post, PostResponse.class);
     }
 
     public void share(Long id, PostShareRequest request) {
@@ -74,5 +72,21 @@ public class PostService {
     public PostResponse get(Long id) {
         Post post = postRepository.findById(id).orElseThrow();
         return modelMapper.map(post, PostResponse.class);
+    }
+
+    public PostResponse deleteComment(Long postId, Long commentId) {
+        Post post = postRepository.deleteComment(postId, commentId).orElseThrow();
+        return modelMapper.map(post, PostResponse.class);
+    }
+
+    public List<CommentResponse> listComments(Long postId) {
+        List<Comment> comments = postRepository.listComments(postId);
+        List<CommentResponse> commentResponses = new LinkedList<>();
+        for (Comment comment : comments) {
+            CommentResponse commentResponse =
+                            modelMapper.map(comment, CommentResponse.class);
+            commentResponses.add(commentResponse);
+        }
+        return commentResponses;
     }
 }

@@ -82,8 +82,8 @@ public class GroupService {
         Group group = groupRepository.findById(id).orElseThrow();
         User user = userRepository.findById(request.getUserId()).orElseThrow();
 
-        group.getFollowers().removeIf(groupFollow -> groupFollow.getUser().getId()
-                        .equals(user.getId()));
+        group.getFollowers().removeIf(groupFollow -> groupFollow.getUser().getIdentity()
+                        .equals(user.getIdentity()));
         groupRepository.save(group);
     }
 }
