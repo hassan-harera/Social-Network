@@ -49,27 +49,6 @@ public class PageService {
         return modelMapper.map(page, PageResponse.class);
     }
 
-    public void comment(Long id, CommentRequest request) {
-        Comment comment = modelMapper.map(request, Comment.class);
-        Post post = postRepository.findById(id).orElseThrow();
-        User user = userRepository.findById(request.getAuthorId()).orElseThrow();
-        comment.setAuthor(user);
-        post.getComments().add(comment);
-        postRepository.save(post);
-    }
-
-    public void like(Long id, LikeRequest request) {
-        Post post = postRepository.findById(id).orElseThrow();
-        User user = userRepository.findById(request.getAuthorId()).orElseThrow();
-
-        Like like = new Like();
-        like.setAuthor(user);
-        like.setDatetime(LocalDateTime.now());
-
-        post.getLikes().add(like);
-        postRepository.save(post);
-    }
-
     public PageResponse get(Long id) {
         Page page = pageRepository.findById(id).orElseThrow();
         return modelMapper.map(page, PageResponse.class);

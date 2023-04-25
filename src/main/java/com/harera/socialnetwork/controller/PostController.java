@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.harera.socialnetwork.model.post.PostRequest;
@@ -45,6 +46,15 @@ public class PostController {
                                     description = "success|Ok"))
     public ResponseEntity<PostResponse> like(@PathVariable("id") Long id, @RequestBody LikeRequest request) {
         PostResponse like = postService.like(id, request);
+        return ResponseEntity.ok(like);
+    }
+
+    @PostMapping("/{id}/unlike")
+    @Operation(summary = "Unlike", description = "Unlike a post", tags = "Post",
+                    responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public ResponseEntity<PostResponse> unlike(@PathVariable("id") Long postId, @RequestParam("userId") Long userId) {
+        PostResponse like = postService.unlike(postId, userId);
         return ResponseEntity.ok(like);
     }
 

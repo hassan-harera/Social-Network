@@ -45,6 +45,11 @@ public class PostService {
         return modelMapper.map(like, PostResponse.class);
     }
 
+    public PostResponse unlike(Long postId, Long userId) {
+        Post like = postRepository.unlike(userId, postId).orElseThrow();
+        return modelMapper.map(like, PostResponse.class);
+    }
+
     public void comment(Long id, CommentRequest request) {
         Comment comment = modelMapper.map(request, Comment.class);
         Post post = postRepository.findById(id).orElseThrow();

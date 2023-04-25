@@ -33,9 +33,6 @@ public class Post extends BaseNode {
     @Relationship(type = "POSTED", direction = Relationship.Direction.INCOMING)
     private User author;
 
-    @Relationship(type = "LIKED", direction = Relationship.Direction.INCOMING)
-    private Set<Like> likes = new HashSet<>();
-
     @Relationship(type = "COMMENTED", direction = Relationship.Direction.INCOMING)
     private Set<Comment> comments = new HashSet<>();
 
