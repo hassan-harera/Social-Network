@@ -2,10 +2,10 @@ package com.harera.socialnetwork.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Setter
 @Getter

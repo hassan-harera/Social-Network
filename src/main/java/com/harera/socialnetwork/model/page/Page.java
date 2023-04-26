@@ -1,7 +1,6 @@
 package com.harera.socialnetwork.model.page;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;

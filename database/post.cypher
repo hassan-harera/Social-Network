@@ -14,9 +14,9 @@ SET r.datetime = datetime()
 RETURN p
 
 // get specific like
-MATCH (u:User)-[r:LIKED]->(p:Post)
-  WHERE id(u) = 1 AND id(p) = 3
-RETURN r
+MATCH (u:User)-[r1:HAS_REACTED]->(re:React)
+MATCH (p:Post)-[r2:HAS_REACT]->(re:React)
+RETURN re
 
 // count post likes
 MATCH (u:User)-[r:LIKED]->(p:Post)

@@ -1,5 +1,7 @@
 package com.harera.socialnetwork.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,15 +17,14 @@ import com.harera.socialnetwork.model.post.PostRequest;
 import com.harera.socialnetwork.model.post.PostResponse;
 import com.harera.socialnetwork.model.post.comment.CommentRequest;
 import com.harera.socialnetwork.model.post.comment.CommentResponse;
-import com.harera.socialnetwork.model.post.like.LikeRequest;
+import com.harera.socialnetwork.model.post.react.ReactRequest;
+import com.harera.socialnetwork.model.post.react.ReactResponse;
 import com.harera.socialnetwork.model.post.share.PostShareRequest;
 import com.harera.socialnetwork.service.PostService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import java.util.List;
 
 @RestController
 @Tag(name = "Post", description = "Post API")
@@ -42,24 +43,34 @@ public class PostController {
         return ResponseEntity.ok(userResponse);
     }
 
-    @PostMapping("/{id}/likes")
-    @Operation(summary = "Like", description = "Like a post", tags = "Post",
+    @PostMapping("/{id}/reacts")
+    @Operation(summary = "React", description = "React a post", tags = "Post",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
-    public ResponseEntity<PostResponse> like(@PathVariable("id") Long id,
-                    @RequestBody LikeRequest request) {
-        PostResponse like = postService.like(id, request);
-        return ResponseEntity.ok(like);
+    public ResponseEntity<Void> react(@PathVariable("id") Long id,
+                    @RequestBody ReactRequest request) {
+        postService.react(id, request);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}/likes")
-    @Operation(summary = "Unlike", description = "Unlike a post", tags = "Post",
+    @GetMapping("/{id}/reacts")
+    @Operation(summary = "List Reacts", description = "List post reacts", tags = "Post",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
-    public ResponseEntity<PostResponse> deleteLike(@PathVariable("id") Long postId,
+    public ResponseEntity<List<ReactResponse>> listReacts(
+                    @PathVariable("id") Long postId) {
+        List<ReactResponse> reactResponses = postService.listReacts(postId);
+        return ResponseEntity.ok(reactResponses);
+    }
+
+    @DeleteMapping("/{id}/reacts")
+    @Operation(summary = "Unreact", description = "Unreact a post", tags = "Post",
+                    responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public ResponseEntity<PostResponse> deleteReact(@PathVariable("id") Long postId,
                     @RequestParam("userId") Long userId) {
-        PostResponse like = postService.deleteLike(postId, userId);
-        return ResponseEntity.ok(like);
+        postService.deleteReact(postId, userId);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/comments")
@@ -103,7 +114,8 @@ public class PostController {
     @Operation(summary = "Comment", description = "Comment a comment", tags = "Post",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
-    public ResponseEntity<List<CommentResponse>> listComment(@PathVariable("id") Long postId) {
+    public ResponseEntity<List<CommentResponse>> listComment(
+                    @PathVariable("id") Long postId) {
         List<CommentResponse> comment = postService.listComments(postId);
         return ResponseEntity.ok(comment);
     }

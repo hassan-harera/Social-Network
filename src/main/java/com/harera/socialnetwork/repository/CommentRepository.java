@@ -16,6 +16,5 @@ public interface CommentRepository extends Neo4jRepository<Comment, Long> {
     List<Comment> listComments(@Param("postId") Long postId);
 
     @Query("MATCH (c:Comment)-[ra:ACTED_ON]->(p:Post) MATCH (u:User)-[rc:COMMENTED]->(c) WHERE id(p) = $postId AND id(c) = $commentId DELETE ra, rc, c")
-    void deleteComment(@Param("postId") Long postId,
-                    @Param("commentId") Long commentId);
+    void deleteComment(@Param("postId") Long postId, @Param("commentId") Long commentId);
 }

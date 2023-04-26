@@ -3,7 +3,6 @@ package com.harera.socialnetwork.model.group;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.harera.socialnetwork.model.BaseNodeDto;
-import com.harera.socialnetwork.model.page.PageDto;
 
 import lombok.Data;
 

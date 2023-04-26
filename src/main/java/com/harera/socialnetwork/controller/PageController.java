@@ -57,8 +57,7 @@ public class PageController {
     @Operation(summary = "Like", description = "Like a page by id", tags = "Page",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
-    public void like(@PathVariable("id") Long id,
-                    @RequestBody PageLikeRequest request) {
+    public void like(@PathVariable("id") Long id, @RequestBody PageLikeRequest request) {
         pageService.like(id, request);
     }
 

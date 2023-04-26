@@ -1,20 +1,20 @@
 package com.harera.socialnetwork.service;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-
-import com.harera.socialnetwork.model.user.follow.UserFollow;
-import com.harera.socialnetwork.model.user.follow.UserFollowRequest;
-import com.harera.socialnetwork.model.user.User;
-import com.harera.socialnetwork.model.user.UserRequest;
-import com.harera.socialnetwork.model.user.UserResponse;
-import com.harera.socialnetwork.repository.UserRepository;
-
-import lombok.extern.log4j.Log4j2;
+import static com.harera.socialnetwork.util.ObjectMapperUtils.mapAll;
 
 import java.time.LocalDateTime;
 
-import static com.harera.socialnetwork.util.ObjectMapperUtils.mapAll;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import com.harera.socialnetwork.model.user.User;
+import com.harera.socialnetwork.model.user.UserRequest;
+import com.harera.socialnetwork.model.user.UserResponse;
+import com.harera.socialnetwork.model.user.follow.UserFollow;
+import com.harera.socialnetwork.model.user.follow.UserFollowRequest;
+import com.harera.socialnetwork.repository.UserRepository;
+
+import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Service

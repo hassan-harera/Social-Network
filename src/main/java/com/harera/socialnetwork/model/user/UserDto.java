@@ -1,14 +1,11 @@
 package com.harera.socialnetwork.model.user;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.harera.socialnetwork.model.BaseNode;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-import java.util.Set;
 
 @Data
 public class UserDto extends BaseNode {
