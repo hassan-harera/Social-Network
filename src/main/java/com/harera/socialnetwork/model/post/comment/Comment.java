@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
-import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 
 import com.harera.socialnetwork.model.BaseNode;
 import com.harera.socialnetwork.model.post.Post;
@@ -14,12 +13,18 @@ import com.harera.socialnetwork.model.user.User;
 import lombok.Data;
 
 @Data
-@Node
+@Node("Comment")
 public class Comment extends BaseNode {
 
     @Property("comment")
     private String comment;
 
+    @Property("datetime")
+    private LocalDateTime datetime;
+
     @Relationship(type = "COMMENTED", direction = Relationship.Direction.INCOMING)
     private User user;
+
+    @Relationship(type = "ACTED_ON", direction = Relationship.Direction.OUTGOING)
+    private Post post;
 }

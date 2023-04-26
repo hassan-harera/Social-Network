@@ -11,6 +11,7 @@ import com.harera.socialnetwork.model.BaseNode;
 import com.harera.socialnetwork.model.BaseNodeDto;
 import com.harera.socialnetwork.model.post.Post;
 import com.harera.socialnetwork.model.user.User;
+import com.harera.socialnetwork.model.user.UserResponse;
 
 import lombok.Data;
 import lombok.Getter;
@@ -25,6 +26,6 @@ public class CommentDto extends BaseNodeDto {
     @JsonProperty("comment")
     private String comment;
 
-    @JsonProperty("author")
-    private User author;
+    @JsonProperty("user")
+    private UserResponse user;
 }

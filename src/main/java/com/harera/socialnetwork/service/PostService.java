@@ -1,5 +1,8 @@
 package com.harera.socialnetwork.service;
 
+import lombok.extern.log4j.Log4j2;
+
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,9 +20,11 @@ import com.harera.socialnetwork.model.post.like.LikeRequest;
 import com.harera.socialnetwork.model.post.share.PostShare;
 import com.harera.socialnetwork.model.post.share.PostShareRequest;
 import com.harera.socialnetwork.model.user.User;
+import com.harera.socialnetwork.repository.CommentRepository;
 import com.harera.socialnetwork.repository.PostRepository;
 import com.harera.socialnetwork.repository.UserRepository;
 
+@Log4j2
 @Service
 public class PostService {
 
@@ -31,6 +36,8 @@ public class PostService {
 
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private CommentRepository commentRepository;
 
     public PostResponse create(PostRequest request) {
         Post post = modelMapper.map(request, Post.class);
@@ -50,10 +57,16 @@ public class PostService {
         return modelMapper.map(like, PostResponse.class);
     }
 
-    public PostResponse comment(Long id, CommentRequest request) {
-        Post post = postRepository
-                        .comment(request.getAuthorId(), id, request.getComment())
-                        .orElseThrow();
+    public PostResponse comment(Long postId, CommentRequest request) {
+        Comment comment = modelMapper.map(request, Comment.class);
+
+        User user = userRepository.findById(request.getAuthorId()).orElseThrow();
+        Post post = postRepository.findById(postId).orElseThrow();
+
+        comment.setUser(user);
+        comment.setPost(post);
+        comment.setDatetime(LocalDateTime.now());
+        commentRepository.save(comment);
         return modelMapper.map(post, PostResponse.class);
     }
 
@@ -74,15 +87,15 @@ public class PostService {
         return modelMapper.map(post, PostResponse.class);
     }
 
-    public PostResponse deleteComment(Long postId, Long commentId) {
-        Post post = postRepository.deleteComment(postId, commentId).orElseThrow();
-        return modelMapper.map(post, PostResponse.class);
+    public void deleteComment(Long postId, Long commentId) {
+        commentRepository.deleteComment(postId, commentId);
     }
 
     public List<CommentResponse> listComments(Long postId) {
-        List<Comment> comments = postRepository.listComments(postId);
+        List<Comment> comments = commentRepository.listComments(postId);
         List<CommentResponse> commentResponses = new LinkedList<>();
         for (Comment comment : comments) {
+            log.info(comment.toString());
             CommentResponse commentResponse =
                             modelMapper.map(comment, CommentResponse.class);
             commentResponses.add(commentResponse);

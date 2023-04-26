@@ -26,7 +26,4 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
     @Query("MATCH (u:User)-[r:COMMENTED]->(p:Post) WHERE id(p) = $postId AND id(r) = $commentId DELETE r RETURN p")
     Optional<Post> deleteComment(Long postId, Long commentId);
-
-    @Query("MATCH (u:User)-[r:COMMENTED]->(p:Post) WHERE id(p) = $postId RETURN r")
-    List<Comment> listComments(@Param("postId") Long postId);
 }

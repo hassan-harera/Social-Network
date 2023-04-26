@@ -94,10 +94,9 @@ public class PostController {
     @Operation(summary = "Comment", description = "Comment a comment", tags = "Post",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
-    public ResponseEntity<PostResponse> deleteComment(@PathVariable("id") Long postId,
+    public void deleteComment(@PathVariable("id") Long postId,
                     @PathVariable("commentId") Long commentId) {
-        PostResponse comment = postService.deleteComment(postId, commentId);
-        return ResponseEntity.ok(comment);
+        postService.deleteComment(postId, commentId);
     }
 
     @GetMapping("/{id}/comments")

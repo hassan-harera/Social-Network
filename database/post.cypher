@@ -21,9 +21,9 @@ RETURN r
 // count post likes
 MATCH (u:User)-[r:LIKED]->(p:Post)
   WHERE id(p) = 3
-RETURN COUNT(r)
+RETURN count(r)
 
-// unlike post
+// delete like post
 MATCH (u:User)-[r:LIKED]->(p:Post)
   WHERE id(u) = 0 AND id(p) = 3
 DELETE r
@@ -34,12 +34,20 @@ MATCH (p:Post)
   WHERE id(u) = 1 AND id(p) = 3
 MERGE (u)-[r:COMMENTED]->(p)
 SET r.datetime = datetime()
-SET r.comment = "This is a comment"
+SET r.comment = 'This is a comment'
 RETURN p
 
 // delete a comment to a post
-MATCH (u:User)-[r:COMMENTED]->(p:Post)
-  WHERE id(r) = 2
-DELETE r
-RETURN p
+MATCH (c:Comment)-[ra:ACTED_ON]->(p:Post)
+MATCH (u:User)-[rc:COMMENTED]->(c)
+  WHERE id(p) = 3 AND id(c) = 6
+DELETE ra, rc, c
+
+
+// write a comment to a post
+MATCH (u:User)
+MATCH (c:Comment)
+  WHERE id(u) = 1 AND id(c) = 3
+MERGE (u)-[r:COMMENTED]->(c)
+RETURN c
 
