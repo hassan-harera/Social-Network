@@ -51,3 +51,21 @@ MATCH (c:Comment)
 MERGE (u)-[r:COMMENTED]->(c)
 RETURN c
 
+// count post comments
+MATCH (p:Post)-[r:HAS_COMMENT]->(c:Comment)
+  WHERE id(p) = 0
+RETURN count (c)
+
+// delete a post
+MATCH (p1:Post)-[r1]->(a)
+MATCH (b)-[r2]->(p2:Post)
+  WHERE id(p) = 8
+DELETE r1, r2, p;
+
+MATCH (b)-[r2]->(p:Post)
+  WHERE id(p) = 8
+DELETE r2;
+
+MATCH (p:Post)
+  WHERE id(p) = 8
+DELETE p

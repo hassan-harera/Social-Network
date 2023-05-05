@@ -22,9 +22,9 @@ public class Comment extends BaseNode {
     @Property("datetime")
     private LocalDateTime datetime;
 
-    @Relationship(type = "COMMENTED", direction = Relationship.Direction.INCOMING)
+    @Relationship(type = "HAS_COMMENTED", direction = Relationship.Direction.INCOMING)
     private User user;
 
-    @Relationship(type = "ACTED_ON", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "HAS_COMMENT", direction = Relationship.Direction.INCOMING)
     private Post post;
 }

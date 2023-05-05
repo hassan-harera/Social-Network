@@ -12,17 +12,18 @@ import com.harera.socialnetwork.model.post.Post;
 @Repository
 public interface PostRepository extends Neo4jRepository<Post, Long> {
 
-    @Query("MATCH (u:User) MATCH (p:Post) WHERE id(u) = $userId AND id(p) = $postId MERGE (u)-[r:LIKED]->(p) SET r.datetime = datetime() RETURN p")
+    @Query("MATCH (u:User) MATCH (p:Post) WHERE id(u) = $userId AND id(p) = $postId MERGE (u)-[r:HAS_LIKED]->(p) SET r.datetime = datetime() RETURN p")
     Optional<Post> react(@Param("userId") Long userId, @Param("postId") Long postId);
 
-    @Query("MATCH (u:User)-[r:LIKED]->(p:Post) WHERE id(u) = $userId AND id(p) = $postId DELETE r RETURN p")
-    Optional<Post> deleteReact(@Param("userId") Long userId,
-                    @Param("postId") Long postId);
+    @Query("MATCH (p:Post)-[r1]->(a) MATCH (b)-[r2]->(p:Post) WHERE id(p) = $postId DELETE r1, r2; MATCH (b)-[r2]->(p:Post) WHERE id(p) = $postId DELETE r2; MATCH (p:Post) WHERE id(p) = $postId DELETE p")
+    void deletePostById(@Param("postId") Long postId);
 
-    @Query("MATCH (u:User) MATCH (p:Post) WHERE id(u) = $userId AND id(p) = $postId MERGE (u)-[r:COMMENTED]->(p) SET r.datetime = datetime() SET r.comment = $comment RETURN p")
-    Optional<Post> comment(@Param("userId") Long userId, @Param("postId") Long postId,
-                    @Param("comment") String comment);
+    @Query("MATCH (p:Post)-[r:HAS_COMMENT]->(c:Comment) WHERE id(p) = $postId RETURN count (c)")
+    int countComments(@Param("postId") Long postId);
 
-    @Query("MATCH (u:User)-[r:COMMENTED]->(p:Post) WHERE id(p) = $postId AND id(r) = $commentId DELETE r RETURN p")
-    Optional<Post> deleteComment(Long postId, Long commentId);
+    @Query("MATCH (p:Post)-[r:HAS_REACT]->(c:React) WHERE id(p) = $postId RETURN count (c)")
+    int countReacts(@Param("postId") Long postId);
+
+    @Query("MATCH (p1:Post)-[r:SHARED_FROM]->(p2:Post) WHERE id(p2) = $postId RETURN count (r)")
+    int countShares(@Param("postId") Long postId);
 }

@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.Session;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.harera.socialnetwork.model.post.Post;
@@ -17,7 +20,6 @@ import com.harera.socialnetwork.model.post.comment.CommentResponse;
 import com.harera.socialnetwork.model.post.react.React;
 import com.harera.socialnetwork.model.post.react.ReactRequest;
 import com.harera.socialnetwork.model.post.react.ReactResponse;
-import com.harera.socialnetwork.model.post.share.PostShare;
 import com.harera.socialnetwork.model.post.share.PostShareRequest;
 import com.harera.socialnetwork.model.user.User;
 import com.harera.socialnetwork.repository.CommentRepository;
@@ -37,15 +39,17 @@ public class PostService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final CommentRepository commentRepository;
+    private final Driver driver;
 
     public PostService(ReactRepository reactRepository, PostRepository postRepository,
                     UserRepository userRepository, ModelMapper modelMapper,
-                    CommentRepository commentRepository) {
+                    CommentRepository commentRepository, Driver driver) {
         this.reactRepository = reactRepository;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.commentRepository = commentRepository;
+        this.driver = driver;
     }
 
     public PostResponse create(PostRequest request) {
@@ -54,6 +58,37 @@ public class PostService {
         post.setAuthor(user);
         post = postRepository.save(post);
         return modelMapper.map(post, PostResponse.class);
+    }
+
+    public PostResponse get(Long id) {
+        Post post = postRepository.findById(id).orElseThrow();
+        return toResponse(post);
+    }
+
+    private PostResponse toResponse(Post post) {
+        long id = post.getIdentity();
+        int commentsCount = postRepository.countComments(id);
+        int reactsCount = postRepository.countReacts(id);
+        int sharesCount = postRepository.countShares(id);
+
+        post.setCommentsCount(commentsCount);
+        post.setReactsCount(reactsCount);
+        post.setSharesCount(sharesCount);
+
+        return modelMapper.map(post, PostResponse.class);
+    }
+
+    public void delete(Long id) {
+        List<String> queries = List.of(
+                        "MATCH (p:Post)-[r1]->(a) WHERE id(p) = %d DELETE r1"
+                                        .formatted(id),
+                        "MATCH (b)-[r2]->(p:Post) WHERE id(p) = %d DELETE r2;"
+                                        .formatted(id),
+                        "MATCH (p:Post) WHERE id(p) = %d DELETE p;".formatted(id));
+        Session session = driver.session();
+        for (String query : queries) {
+            session.run(query);
+        }
     }
 
     public List<ReactResponse> listReacts(Long postId) {
@@ -96,20 +131,15 @@ public class PostService {
     }
 
     public void share(Long id, PostShareRequest request) {
-        PostShare share = modelMapper.map(request, PostShare.class);
-
+        Post originalPost = postRepository.findById(id).orElseThrow();
         User user = userRepository.findById(request.getAuthorId()).orElseThrow();
-        share.setAuthor(user);
 
-        Post post = postRepository.findById(id).orElseThrow();
-        post.getShares().add(share);
+        Post post = modelMapper.map(request, Post.class);
+        post.setDatetime(LocalDateTime.now());
+        post.setAuthor(user);
+        post.setSharedPost(originalPost);
 
         postRepository.save(post);
-    }
-
-    public PostResponse get(Long id) {
-        Post post = postRepository.findById(id).orElseThrow();
-        return modelMapper.map(post, PostResponse.class);
     }
 
     public void deleteComment(Long postId, Long commentId) {
@@ -126,5 +156,11 @@ public class PostService {
             commentResponses.add(commentResponse);
         }
         return commentResponses;
+    }
+
+    public List<PostResponse> list(int page) {
+        page = Integer.max(page, 1) - 1;
+        return postRepository.findAll(PageRequest.of(page, 10)).getContent().stream()
+                        .map(this::toResponse).toList();
     }
 }

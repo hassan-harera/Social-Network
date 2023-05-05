@@ -44,7 +44,7 @@ public class PostController {
     }
 
     @PostMapping("/{id}/reacts")
-    @Operation(summary = "React", description = "React a post", tags = "Post",
+    @Operation(summary = "React", description = "Make a raact to a post", tags = "Post",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
     public ResponseEntity<Void> react(@PathVariable("id") Long id,
@@ -93,12 +93,31 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get", description = "Get a user", tags = "User",
+    @Operation(summary = "Get", description = "Get a user", tags = "Post",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
     public ResponseEntity<PostResponse> get(@PathVariable("id") Long id) {
         PostResponse userResponse = postService.get(id);
         return ResponseEntity.ok(userResponse);
+    }
+
+    @GetMapping
+    @Operation(summary = "List", description = "List posts", tags = "Post",
+                    responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public ResponseEntity<List<PostResponse>> list(
+                    @RequestParam(value = "page", defaultValue = "1") int page) {
+        List<PostResponse> userResponse = postService.list(page);
+        return ResponseEntity.ok(userResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete", description = "Delete a user", tags = "Post",
+                    responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public ResponseEntity<PostResponse> delete(@PathVariable("id") Long id) {
+        postService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/comments/{commentId}")

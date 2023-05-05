@@ -3,6 +3,7 @@ package com.harera.socialnetwork.service;
 import static com.harera.socialnetwork.util.ObjectMapperUtils.mapAll;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -56,5 +57,15 @@ public class UserService {
         response.setFollowerList(mapAll(user.getFollowers(), UserResponse.class));
         response.setFollowingList(mapAll(user.getFollowings(), UserResponse.class));
         return response;
+    }
+
+    public List<UserResponse> listFollowers(Long id) {
+        List<User> followers = userRepository.findUserFollowersById(id);
+        return mapAll(followers, UserResponse.class);
+    }
+
+    public List<UserResponse> listFollowings(Long id) {
+        List<User> followings = userRepository.findUserFollowingsById(id);
+        return mapAll(followings, UserResponse.class);
     }
 }

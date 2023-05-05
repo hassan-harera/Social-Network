@@ -12,9 +12,9 @@ import com.harera.socialnetwork.model.post.comment.Comment;
 @Repository
 public interface CommentRepository extends Neo4jRepository<Comment, Long> {
 
-    @Query("MATCH (c:Comment)-[r:ACTED_ON]->(p:Post) WHERE id(p) = $postId RETURN c")
+    @Query("MATCH (p:Post)-[r:HAS_COMMENT]->(c:Comment) WHERE id(p) = $postId RETURN c")
     List<Comment> listComments(@Param("postId") Long postId);
 
-    @Query("MATCH (c:Comment)-[ra:ACTED_ON]->(p:Post) MATCH (u:User)-[rc:COMMENTED]->(c) WHERE id(p) = $postId AND id(c) = $commentId DELETE ra, rc, c")
+    @Query("MATCH (p:Post)-[ra:HAS_COMMENT]->(c:Comment) MATCH (u:User)-[rc:HAS_COMMENTED]->(c) WHERE id(p) = $postId AND id(c) = $commentId DELETE ra, rc, c")
     void deleteComment(@Param("postId") Long postId, @Param("commentId") Long commentId);
 }

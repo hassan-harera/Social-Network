@@ -1,5 +1,7 @@
 package com.harera.socialnetwork.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,5 +53,23 @@ public class UserController {
     public ResponseEntity<UserResponse> get(@PathVariable("id") Long id) {
         UserResponse userResponse = userService.get(id);
         return ResponseEntity.ok(userResponse);
+    }
+
+    @GetMapping("/{id}/followers")
+    @Operation(summary = "List followers", description = "List user followers by id",
+                    tags = "User", responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public ResponseEntity<List<UserResponse>> listFollowers(@PathVariable("id") Long id) {
+        List<UserResponse> followers = userService.listFollowers(id);
+        return ResponseEntity.ok(followers);
+    }
+
+    @GetMapping("/{id}/followings")
+    @Operation(summary = "List followings", description = "List user followings by id",
+                    tags = "User", responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public ResponseEntity<List<UserResponse>> listFollowings(@PathVariable("id") Long id) {
+        List<UserResponse> followers = userService.listFollowings(id);
+        return ResponseEntity.ok(followers);
     }
 }
