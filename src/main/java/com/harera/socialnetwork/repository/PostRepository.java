@@ -1,5 +1,6 @@
 package com.harera.socialnetwork.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -26,4 +27,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
     @Query("MATCH (p1:Post)-[r:SHARED_FROM]->(p2:Post) WHERE id(p2) = $postId RETURN count (r)")
     int countShares(@Param("postId") Long postId);
+
+    @Query("MATCH (u:User)-[:FOLLOW_USER]->(f:User)-[:POSTED]->(p:Post) WHERE id(u) = $id RETURN id(p) ORDER BY p.datetime DESC")
+    List<Long> findFollowingUsersPostsById(@Param("id") Long id);
 }

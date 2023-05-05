@@ -1,5 +1,7 @@
 package com.harera.socialnetwork.service;
 
+import static com.harera.socialnetwork.util.ObjectMapperUtils.mapAll;
+
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +28,6 @@ import com.harera.socialnetwork.repository.CommentRepository;
 import com.harera.socialnetwork.repository.PostRepository;
 import com.harera.socialnetwork.repository.ReactRepository;
 import com.harera.socialnetwork.repository.UserRepository;
-import com.harera.socialnetwork.util.ObjectMapperUtils;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -93,7 +94,7 @@ public class PostService {
 
     public List<ReactResponse> listReacts(Long postId) {
         List<React> reacts = reactRepository.findAllByPostId(postId);
-        return ObjectMapperUtils.mapAll(reacts, ReactResponse.class);
+        return mapAll(reacts, ReactResponse.class);
     }
 
     public void react(Long id, ReactRequest request) {
@@ -162,5 +163,11 @@ public class PostService {
         page = Integer.max(page, 1) - 1;
         return postRepository.findAll(PageRequest.of(page, 10)).getContent().stream()
                         .map(this::toResponse).toList();
+    }
+
+    public List<PostResponse> getFeedPosts(Long id) {
+        List<Long> postIds = postRepository.findFollowingUsersPostsById(id);
+        List<Post> posts = postRepository.findAllById(postIds);
+        return mapAll(posts, PostResponse.class);
     }
 }

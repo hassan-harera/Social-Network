@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.harera.socialnetwork.model.post.PostResponse;
 import com.harera.socialnetwork.model.user.UserRequest;
 import com.harera.socialnetwork.model.user.UserResponse;
 import com.harera.socialnetwork.model.user.follow.UserFollowRequest;
+import com.harera.socialnetwork.service.PostService;
 import com.harera.socialnetwork.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +29,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private PostService postService;
 
     @PostMapping
     @Operation(summary = "Create", description = "Create a user", tags = "User",
@@ -71,5 +75,14 @@ public class UserController {
     public ResponseEntity<List<UserResponse>> listFollowings(@PathVariable("id") Long id) {
         List<UserResponse> followers = userService.listFollowings(id);
         return ResponseEntity.ok(followers);
+    }
+
+    @GetMapping("/{id}/feed")
+    @Operation(summary = "Get Feed", description = "Get feed posts",
+                    tags = "User", responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public ResponseEntity<List<PostResponse>> feed(@PathVariable("id") Long id) {
+        List<PostResponse> posts = postService.getFeedPosts(id);
+        return ResponseEntity.ok(posts);
     }
 }

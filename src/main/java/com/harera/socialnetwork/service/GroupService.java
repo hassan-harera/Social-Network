@@ -42,6 +42,8 @@ public class GroupService {
         group.setCreator(user);
 
         group = groupRepository.save(group);
+        groupRepository.join(request.getOwnerId(), group.getIdentity());
+        groupRepository.follow(request.getOwnerId(), group.getIdentity());
         return modelMapper.map(group, GroupResponse.class);
     }
 

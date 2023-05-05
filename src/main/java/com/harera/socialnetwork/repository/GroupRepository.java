@@ -15,4 +15,10 @@ public interface GroupRepository extends Neo4jRepository<Group, Long> {
 
     @Query("MATCH (u:User) MATCH (p:Post) WHERE id(u) = 0 AND id(p) = 3 MERGE (u)-[r:HAS_LIKED]->(p)")
     void like(@Param("userId") Long userId, @Param("groupId") Long groupId);
+
+    @Query("MATCH (u:User) MATCH (g:Group) WHERE id(u) = $userId AND id(g) = $groupId MERGE (u)-[r:JOINED]->(g) SET r.datetime = datetime()")
+    void join(@Param("userId") Long userId, @Param("groupId") Long groupId);
+
+    @Query("MATCH (u:User) MATCH (g:Group) WHERE id(u) = $userId AND id(g) = $groupId MERGE (u)-[r:FOLLOW]->(g) SET r.datetime = datetime()")
+    void follow(@Param("userId") Long userId, @Param("groupId") Long groupId);
 }
