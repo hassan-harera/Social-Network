@@ -39,8 +39,13 @@ public class PageService {
 
         User user = userRepository.findById(request.getOwnerId()).orElseThrow();
         page.setOwner(user);
+        page.setCreator(user);
 
         page = pageRepository.save(page);
+
+        pageRepository.follow(page.getIdentity(), request.getOwnerId());
+        pageRepository.like(page.getIdentity(), request.getOwnerId());
+
         return modelMapper.map(page, PageResponse.class);
     }
 
@@ -50,27 +55,11 @@ public class PageService {
     }
 
     public void follow(Long id, PageFollowRequest request) {
-        Page page = pageRepository.findById(id).orElseThrow();
-        User user = userRepository.findById(request.getUserId()).orElseThrow();
-
-        PageFollow pageFollow = new PageFollow();
-        pageFollow.setUser(user);
-        pageFollow.setDateTime(LocalDateTime.now());
-
-        page.getFollowers().add(pageFollow);
-        pageRepository.save(page);
+        pageRepository.follow(id, request.getUserId());
     }
 
     public void like(Long id, PageLikeRequest request) {
-        Page page = pageRepository.findById(id).orElseThrow();
-
-        User user = userRepository.findById(request.getUserId()).orElseThrow();
-        PageLike pageLike = new PageLike();
-        pageLike.setUser(user);
-        pageLike.setDateTime(LocalDateTime.now());
-
-        page.getLikes().add(pageLike);
-
-        pageRepository.save(page);
+        pageRepository.follow(id, request.getUserId());
+        pageRepository.like(id, request.getUserId());
     }
 }

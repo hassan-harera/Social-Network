@@ -16,13 +16,4 @@ public class PageDto extends BaseNodeDto {
 
     @JsonProperty("name")
     private String name;
-
-    @JsonProperty("owner")
-    private UserResponse owner;
-
-    @JsonProperty("followers")
-    private List<UserResponse> followers;
-
-    @JsonProperty("likes")
-    private List<UserResponse> likes;
 }

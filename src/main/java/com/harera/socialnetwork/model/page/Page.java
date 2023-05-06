@@ -29,9 +29,6 @@ public class Page extends BaseNode {
     @Relationship(value = "OWN", direction = Relationship.Direction.INCOMING)
     private User owner;
 
-    @Relationship(value = "FOLLOW_PAGE", direction = Relationship.Direction.INCOMING)
-    private Set<PageFollow> followers;
-
-    @Relationship(value = "LIKE_PAGE", direction = Relationship.Direction.INCOMING)
-    private Set<PageLike> likes;
+    @Relationship(value = "CREATED", direction = Relationship.Direction.INCOMING)
+    private User creator;
 }
