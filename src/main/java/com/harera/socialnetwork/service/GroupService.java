@@ -13,6 +13,9 @@ import com.harera.socialnetwork.model.group.follow.GroupFollow;
 import com.harera.socialnetwork.model.group.follow.GroupFollowRequest;
 import com.harera.socialnetwork.model.group.join.GroupJoin;
 import com.harera.socialnetwork.model.group.join.GroupJoinRequest;
+import com.harera.socialnetwork.model.post.Post;
+import com.harera.socialnetwork.model.post.PostRequest;
+import com.harera.socialnetwork.model.post.PostResponse;
 import com.harera.socialnetwork.model.user.User;
 import com.harera.socialnetwork.model.user.UserResponse;
 import com.harera.socialnetwork.repository.GroupRepository;
@@ -92,9 +95,29 @@ public class GroupService {
         groupRepository.save(group);
     }
 
-    public List<UserResponse> getUsers(Long id) {
+    public List<UserResponse> listUsers(Long id) {
         List<Long> userIds = groupRepository.findGroupUserIds(id);
         return ObjectMapperUtils.mapAll(userRepository.findAllById(userIds),
                         UserResponse.class);
+    }
+
+    public List<PostResponse> listPosts(Long id) {
+        List<Long> postIds = groupRepository.findGroupPostIds(id);
+        return ObjectMapperUtils.mapAll(postRepository.findAllById(postIds),
+                        PostResponse.class);
+    }
+
+    public PostResponse createPost(Long id, PostRequest postRequest) {
+        Post post = modelMapper.map(postRequest, Post.class);
+        User user = userRepository.findById(postRequest.getAuthorId()).orElseThrow();
+        post.setAuthor(user);
+        post = postRepository.save(post);
+        groupRepository.addPost(id, post.getIdentity());
+        return modelMapper.map(post, PostResponse.class);
+    }
+
+    public void delete(Long id) {
+        groupRepository.deleteGroupRelationsById(id);
+        groupRepository.deleteById(id);
     }
 }

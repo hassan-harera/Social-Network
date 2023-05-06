@@ -2,7 +2,10 @@ package com.harera.socialnetwork.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,12 +17,16 @@ import com.harera.socialnetwork.model.group.GroupRequest;
 import com.harera.socialnetwork.model.group.GroupResponse;
 import com.harera.socialnetwork.model.group.follow.GroupFollowRequest;
 import com.harera.socialnetwork.model.group.join.GroupJoinRequest;
+import com.harera.socialnetwork.model.post.PostRequest;
+import com.harera.socialnetwork.model.post.PostResponse;
 import com.harera.socialnetwork.model.user.UserResponse;
 import com.harera.socialnetwork.service.GroupService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
 @Tag(name = "Group", description = "Group API")
@@ -38,7 +45,16 @@ public class GroupController {
                                     description = "success|Ok"))
     public ResponseEntity<GroupResponse> create(@RequestBody GroupRequest request) {
         GroupResponse groupResponse = groupService.create(request);
-        return ResponseEntity.ok(groupResponse);
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(groupResponse);
+    }
+
+    @DeleteMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete Group", description = "Delete a group by id",
+                    tags = "Group", responses = @ApiResponse(responseCode = "204",
+                                    description = "Success|No Content"))
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        groupService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/follow")
@@ -81,7 +97,28 @@ public class GroupController {
                     tags = "Group", responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
     public ResponseEntity<List<UserResponse>> getUsers(@PathVariable("id") Long id) {
-        List<UserResponse> users = groupService.getUsers(id);
+        List<UserResponse> users = groupService.listUsers(id);
         return ResponseEntity.ok(users);
+    }
+
+    @PostMapping("/{id}/posts")
+    @Operation(summary = "Create post",
+                    description = "Create a post in a group with group id",
+                    tags = "Group", responses = @ApiResponse(responseCode = "201",
+                                    description = "Success|Created"))
+    public ResponseEntity<PostResponse> createPost(@PathVariable("id") Long id,
+                    @RequestBody PostRequest postRequest) {
+        PostResponse postResponse = groupService.createPost(id, postRequest);
+        return ResponseEntity.ok(postResponse);
+    }
+
+    @GetMapping("/{id}/posts")
+    @Operation(summary = "List group posts",
+                    description = "List group posts with group id", tags = "Group",
+                    responses = @ApiResponse(responseCode = "200",
+                                    description = "Success|Ok"))
+    public ResponseEntity<List<PostResponse>> listPosts(@PathVariable("id") Long id) {
+        List<PostResponse> posts = groupService.listPosts(id);
+        return ResponseEntity.ok(posts);
     }
 }
