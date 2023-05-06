@@ -1,5 +1,7 @@
 package com.harera.socialnetwork.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,7 @@ import com.harera.socialnetwork.model.group.GroupRequest;
 import com.harera.socialnetwork.model.group.GroupResponse;
 import com.harera.socialnetwork.model.group.follow.GroupFollowRequest;
 import com.harera.socialnetwork.model.group.join.GroupJoinRequest;
+import com.harera.socialnetwork.model.user.UserResponse;
 import com.harera.socialnetwork.service.GroupService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -73,12 +76,12 @@ public class GroupController {
         groupService.leave(id, request);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get Group", description = "Get a group by id", tags = "Group",
-                    responses = @ApiResponse(responseCode = "200",
+    @GetMapping("/{id}/users")
+    @Operation(summary = "Get group users", description = "Get a group users",
+                    tags = "Group", responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
-    public ResponseEntity<GroupResponse> get(@PathVariable("id") Long id) {
-        GroupResponse groupResponse = groupService.get(id);
-        return ResponseEntity.ok(groupResponse);
+    public ResponseEntity<List<UserResponse>> getUsers(@PathVariable("id") Long id) {
+        List<UserResponse> users = groupService.getUsers(id);
+        return ResponseEntity.ok(users);
     }
 }

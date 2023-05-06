@@ -1,6 +1,7 @@
 package com.harera.socialnetwork.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,11 @@ import com.harera.socialnetwork.model.group.follow.GroupFollowRequest;
 import com.harera.socialnetwork.model.group.join.GroupJoin;
 import com.harera.socialnetwork.model.group.join.GroupJoinRequest;
 import com.harera.socialnetwork.model.user.User;
+import com.harera.socialnetwork.model.user.UserResponse;
 import com.harera.socialnetwork.repository.GroupRepository;
 import com.harera.socialnetwork.repository.PostRepository;
 import com.harera.socialnetwork.repository.UserRepository;
+import com.harera.socialnetwork.util.ObjectMapperUtils;
 
 @Service
 public class GroupService {
@@ -87,5 +90,11 @@ public class GroupService {
         group.getFollowers().removeIf(groupFollow -> groupFollow.getUser().getIdentity()
                         .equals(user.getIdentity()));
         groupRepository.save(group);
+    }
+
+    public List<UserResponse> getUsers(Long id) {
+        List<Long> userIds = groupRepository.findGroupUserIds(id);
+        return ObjectMapperUtils.mapAll(userRepository.findAllById(userIds),
+                        UserResponse.class);
     }
 }

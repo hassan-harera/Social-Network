@@ -1,5 +1,7 @@
 package com.harera.socialnetwork.repository;
 
+import java.util.List;
+
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +23,7 @@ public interface GroupRepository extends Neo4jRepository<Group, Long> {
 
     @Query("MATCH (u:User) MATCH (g:Group) WHERE id(u) = $userId AND id(g) = $groupId MERGE (u)-[r:FOLLOW]->(g) SET r.datetime = datetime()")
     void follow(@Param("userId") Long userId, @Param("groupId") Long groupId);
+
+    @Query("MATCH (u:User)-[r:JOINED]->(g:Group) WHERE id(g) = $id RETURN id(u)")
+    List<Long> findGroupUserIds(Long id);
 }
