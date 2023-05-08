@@ -19,8 +19,8 @@ public interface PageRepository extends Neo4jRepository<Page, Long> {
     @Query("MATCH (u:User) MATCH (p:Page) WHERE id(u) = $userId AND id(p) = $pageId MERGE (u)-[r:LIKED]->(p) SET r.datetime = datetime()")
     void like(@Param("pageId") Long pageId, @Param("userId") long userId);
 
-    @Query("MATCH (pa:Page)-[r:POSTED]->(po:Post) WHERE id(pa) = $id")
-    List<Long> listPostIds(Long id);
+    @Query("MATCH (pa:Page)-[r:POSTED]->(po:Post) WHERE id(pa) = $id RETURN id(po)")
+    List<Long> listPostIds(@Param("id") Long id);
 
     @Query("MATCH (pa:Page) MATCH (po:Post) WHERE id(pa) = $pageId AND id(po) = $postId MERGE (pa)-[r:POSTED]->(po) SET r.datetime = datetime()")
     PageService post(@Param("pageId") Long pageId, @Param("postId") Long postId);

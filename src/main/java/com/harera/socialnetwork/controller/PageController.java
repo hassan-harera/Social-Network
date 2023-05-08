@@ -2,6 +2,8 @@ package com.harera.socialnetwork.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -112,5 +114,24 @@ public class PageController {
                     @RequestBody PagePostRequest request) {
         PostResponse post = pageService.createPost(id, request);
         return ResponseEntity.ok(post);
+    }
+
+    @GetMapping("/{id}/posts")
+    @Operation(summary = "List Posts", description = "List page posts.",
+                    tags = { "Page" })
+    @ApiResponses(value = { @ApiResponse(responseCode = "200",
+                    description = "The post was retrieved successfully.",
+                    content = { @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(
+                                                    implementation = PageResponse.class)) }),
+            @ApiResponse(responseCode = "404",
+                            description = "The post with the specified ID was not found.",
+                            content = { @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(
+                                                            implementation = ErrorResponse.class)) }) })
+    public ResponseEntity<List<PostResponse>> listPosts(@PathVariable("id") Long id) {
+        List<PostResponse> posts = pageService.listPosts(id);
+        return ResponseEntity.ok(posts);
     }
 }
