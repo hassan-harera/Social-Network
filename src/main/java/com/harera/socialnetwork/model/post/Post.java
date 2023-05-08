@@ -8,14 +8,13 @@ import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.harera.socialnetwork.model.BaseNode;
-import com.harera.socialnetwork.model.BaseNodeDto;
+import com.harera.socialnetwork.model.author.Author;
+import com.harera.socialnetwork.model.page.Page;
 import com.harera.socialnetwork.model.user.User;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
+@Data
 @Node("Post")
 public class Post extends BaseNode {
 
@@ -26,7 +25,10 @@ public class Post extends BaseNode {
     private String body;
 
     @Relationship(type = "POSTED", direction = Relationship.Direction.INCOMING)
-    private User author;
+    private User user;
+
+    @Relationship(type = "POSTED", direction = Relationship.Direction.INCOMING)
+    private Page page;
 
     @Relationship(type = "SHARED_FROM", direction = Relationship.Direction.OUTGOING)
     private Post sharedPost;
@@ -39,4 +41,12 @@ public class Post extends BaseNode {
 
     @Transient
     private int sharesCount;
+
+    public Author getAuthor() {
+        if (page != null) {
+            return page;
+        } else {
+            return user;
+        }
+    }
 }

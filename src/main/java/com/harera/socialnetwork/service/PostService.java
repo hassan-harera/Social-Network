@@ -56,7 +56,7 @@ public class PostService {
     public PostResponse create(PostRequest request) {
         Post post = modelMapper.map(request, Post.class);
         User user = userRepository.findById(request.getAuthorId()).orElseThrow();
-        post.setAuthor(user);
+        post.setUser(user);
         post = postRepository.save(post);
         return modelMapper.map(post, PostResponse.class);
     }
@@ -137,7 +137,7 @@ public class PostService {
 
         Post post = modelMapper.map(request, Post.class);
         post.setDatetime(LocalDateTime.now());
-        post.setAuthor(user);
+        post.setUser(user);
         post.setSharedPost(originalPost);
 
         postRepository.save(post);

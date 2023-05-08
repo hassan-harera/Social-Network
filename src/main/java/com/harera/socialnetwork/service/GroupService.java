@@ -110,7 +110,7 @@ public class GroupService {
     public PostResponse createPost(Long id, PostRequest postRequest) {
         Post post = modelMapper.map(postRequest, Post.class);
         User user = userRepository.findById(postRequest.getAuthorId()).orElseThrow();
-        post.setAuthor(user);
+        post.setUser(user);
         post = postRepository.save(post);
         groupRepository.addPost(id, post.getIdentity());
         return modelMapper.map(post, PostResponse.class);

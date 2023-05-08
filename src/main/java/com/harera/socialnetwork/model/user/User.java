@@ -7,7 +7,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import com.harera.socialnetwork.model.BaseNode;
+import com.harera.socialnetwork.model.author.Author;
 import com.harera.socialnetwork.model.user.follow.UserFollow;
 
 import lombok.Getter;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Node("User")
-public class User extends BaseNode {
+public class User extends Author {
 
     @Property("username")
     private String username;
@@ -47,4 +47,8 @@ public class User extends BaseNode {
 
     @Relationship(type = "FOLLOW_USER", direction = Relationship.Direction.INCOMING)
     private Set<UserFollow> followers = new HashSet<>();
+
+    public String getName() {
+        return firstName + " " + lastName;
+    }
 }
