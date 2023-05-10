@@ -23,6 +23,12 @@ public class Page extends Author {
     @Property("name")
     private String name;
 
+    @Property("followers_count")
+    private Integer followersCount = 0;
+
+    @Property("likes_count")
+    private Integer likesCount = 0;
+
     @Relationship(value = "OWN", direction = Relationship.Direction.INCOMING)
     private User owner;
 

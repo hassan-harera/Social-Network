@@ -15,6 +15,7 @@ import com.harera.socialnetwork.model.page.post.PagePostRequest;
 import com.harera.socialnetwork.model.post.Post;
 import com.harera.socialnetwork.model.post.PostResponse;
 import com.harera.socialnetwork.model.user.User;
+import com.harera.socialnetwork.model.user.UserResponse;
 import com.harera.socialnetwork.repository.PageRepository;
 import com.harera.socialnetwork.repository.PostRepository;
 import com.harera.socialnetwork.repository.UserRepository;
@@ -46,8 +47,8 @@ public class PageService {
 
         page = pageRepository.save(page);
 
-        pageRepository.follow(page.getIdentity(), request.getOwnerId());
-        pageRepository.like(page.getIdentity(), request.getOwnerId());
+        pageRepository.mergeFollowRelationByIdAndUserId(page.getIdentity(), request.getOwnerId());
+        pageRepository.mergeLikeRelationByIdAndUserId(page.getIdentity(), request.getOwnerId());
 
         return modelMapper.map(page, PageResponse.class);
     }
@@ -58,12 +59,47 @@ public class PageService {
     }
 
     public void follow(Long id, PageFollowRequest request) {
-        pageRepository.follow(id, request.getUserId());
+        int exist = pageRepository.countFollowRelationByIdAndUserId(id, request.getUserId());
+        if (exist == 1)
+            throw new RuntimeException("User already follow page");
+        pageRepository.mergeFollowRelationByIdAndUserId(id, request.getUserId());
+        Page page = pageRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Page not found"));
+        page.setFollowersCount(page.getFollowersCount() + 1);
+        pageRepository.save(page);
+    }
+
+    public void unfollow(Long id, Long userId) {
+        int exist = pageRepository.countFollowRelationByIdAndUserId(id, userId);
+        if (exist == 0)
+            throw new RuntimeException("User not follow page");
+        pageRepository.deleteFollowRelationByIdAndUserId(id, userId);
+        Page page = pageRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Page not found"));
+        page.setFollowersCount(page.getFollowersCount() - 1);
+        pageRepository.save(page);
     }
 
     public void like(Long id, PageLikeRequest request) {
-        pageRepository.follow(id, request.getUserId());
-        pageRepository.like(id, request.getUserId());
+        pageRepository.mergeFollowRelationByIdAndUserId(id, request.getUserId());
+        pageRepository.mergeLikeRelationByIdAndUserId(id, request.getUserId());
+        Page page = pageRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Page not found"));
+        page.setLikesCount(page.getLikesCount() + 1);
+        pageRepository.save(page);
+    }
+
+    public void unlike(Long id, Long userId) {
+        int exist = pageRepository.countLikeRelationByIdAndUserId(id, userId);
+        if (exist == 0)
+            throw new RuntimeException("User not follow page");
+        pageRepository.deleteFollowRelationByIdAndUserId(id, userId);
+        pageRepository.deleteLikeRelationByIdAndUserId(id, userId);
+        Page page = pageRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Page not found"));
+        page.setLikesCount(page.getLikesCount() + 1);
+        page.setLikesCount(page.getLikesCount() + 1);
+        pageRepository.save(page);
     }
 
     public PostResponse createPost(Long id, PagePostRequest request) {
@@ -75,7 +111,7 @@ public class PageService {
         post.setPage(page);
         postRepository.save(post);
 
-        pageRepository.post(id, post.getIdentity());
+        pageRepository.mergePostRelationByIdAndPostId(id, post.getIdentity());
         return modelMapper.map(post, PostResponse.class);
     }
 
@@ -88,5 +124,11 @@ public class PageService {
     public void delete(Long id) {
         pageRepository.deleteRelations(id);
         pageRepository.deleteById(id);
+    }
+
+    public List<UserResponse> listFollowers(Long id) {
+        List<Long> ids = pageRepository.listFollowerIds(id);
+        List<User> users = userRepository.findAllById(ids);
+        return ObjectMapperUtils.mapAll(users, UserResponse.class);
     }
 }

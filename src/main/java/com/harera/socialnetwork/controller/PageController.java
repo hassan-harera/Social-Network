@@ -23,6 +23,8 @@ import com.harera.socialnetwork.model.page.follow.PageFollowRequest;
 import com.harera.socialnetwork.model.page.like.PageLikeRequest;
 import com.harera.socialnetwork.model.page.post.PagePostRequest;
 import com.harera.socialnetwork.model.post.PostResponse;
+import com.harera.socialnetwork.model.user.User;
+import com.harera.socialnetwork.model.user.UserResponse;
 import com.harera.socialnetwork.service.PageService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,9 +66,28 @@ public class PageController {
     @Operation(summary = "Follow", description = "Follow a page by id", tags = "Page",
                     responses = @ApiResponse(responseCode = "200",
                                     description = "success|Ok"))
-    public void comment(@PathVariable("id") Long id,
+    public void follow(@PathVariable("id") Long id,
                     @RequestBody PageFollowRequest request) {
         pageService.follow(id, request);
+    }
+
+    @DeleteMapping("/{id}/followers/{user_id}")
+    @Operation(summary = "Unfollow",
+                    description = "Unfollow a page by page id and user id", tags = "Page",
+                    responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public void unfollow(@PathVariable("id") Long id,
+                    @PathVariable("user_id") Long userId) {
+        pageService.unfollow(id, userId);
+    }
+
+    @GetMapping("/{id}/followers")
+    @Operation(summary = "List Followers", description = "List page followers by id",
+                    tags = "Page", responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public ResponseEntity<List<UserResponse>> listFollow(@PathVariable("id") Long id) {
+        List<UserResponse> users = pageService.listFollowers(id);
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping("/{id}/likes")
@@ -75,6 +96,15 @@ public class PageController {
                                     description = "success|Ok"))
     public void like(@PathVariable("id") Long id, @RequestBody PageLikeRequest request) {
         pageService.like(id, request);
+    }
+
+    @DeleteMapping("/{id}/likes/{user_id}")
+    @Operation(summary = "Unlike", description = "Unlike a page by id and user id",
+                    tags = "Page", responses = @ApiResponse(responseCode = "200",
+                                    description = "success|Ok"))
+    public void unlike(@PathVariable("id") Long id,
+                    @PathVariable("user_id") Long userId) {
+        pageService.unlike(id, userId);
     }
 
     @GetMapping("/{id}")
