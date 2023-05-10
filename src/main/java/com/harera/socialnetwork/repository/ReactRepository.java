@@ -24,6 +24,6 @@ public interface ReactRepository extends Neo4jRepository<React, Long> {
     Optional<React> findByUserIdAndPostId(@Param("userId") Long userId,
                     @Param("postId") Long postId);
 
-    @Query("MATCH (p:Post)-[r2:HAS_REACT]->(re:React) WHERE id(p) = $postId RETURN re")
-    List<React> findAllByPostId(Long postId);
+    @Query("MATCH (p:Post)-[r2:HAS_REACT]->(re:React) WHERE id(p) = $postId RETURN id(re)")
+    List<Long> findAllIdsByPostId(Long postId);
 }

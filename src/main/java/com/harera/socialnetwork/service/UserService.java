@@ -54,8 +54,6 @@ public class UserService {
 
     private UserResponse mapToUserResponse(User user) {
         UserResponse response = modelMapper.map(user, UserResponse.class);
-        response.setFollowerList(mapAll(user.getFollowers(), UserResponse.class));
-        response.setFollowingList(mapAll(user.getFollowings(), UserResponse.class));
         return response;
     }
 

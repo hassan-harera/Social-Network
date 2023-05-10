@@ -34,10 +34,4 @@ public class UserDto extends BaseNodeDto {
 
     @JsonProperty("mobile")
     private String mobile;
-
-    @JsonProperty("followers")
-    private List<UserResponse> followerList;
-
-    @JsonProperty("followings")
-    private List<UserResponse> followingList;
 }

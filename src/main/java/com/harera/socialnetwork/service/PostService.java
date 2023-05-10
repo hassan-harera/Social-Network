@@ -93,7 +93,8 @@ public class PostService {
     }
 
     public List<ReactResponse> listReacts(Long postId) {
-        List<React> reacts = reactRepository.findAllByPostId(postId);
+        List<Long> ids = reactRepository.findAllIdsByPostId(postId);
+        List<React> reacts = reactRepository.findAllById(ids);
         return mapAll(reacts, ReactResponse.class);
     }
 
@@ -148,7 +149,8 @@ public class PostService {
     }
 
     public List<CommentResponse> listComments(Long postId) {
-        List<Comment> comments = commentRepository.listComments(postId);
+        List<Long> ids = commentRepository.listCommentIdsByPostId(postId);
+        List<Comment> comments = commentRepository.findAllById(ids);
         List<CommentResponse> commentResponses = new LinkedList<>();
         for (Comment comment : comments) {
             log.info(comment.toString());
